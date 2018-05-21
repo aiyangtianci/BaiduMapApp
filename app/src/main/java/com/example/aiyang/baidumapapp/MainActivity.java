@@ -69,15 +69,18 @@ public class MainActivity extends BaseActivity implements SensorEventListener,Vi
     private Double lastX = 0.0;
     @Override
     protected int getConentView() {
+
+        SDKInitializer.initialize(getApplicationContext());//百度地图
+
         return R.layout.activity_map;
     }
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        //ButterKnife绑定设置
+
         setTitle("打卡签到");
 
-        setTitleBack(false);
+        setTitleBack(true);
 
         initBaiduMap();     //1、初始化地图
 
@@ -339,9 +342,9 @@ public class MainActivity extends BaseActivity implements SensorEventListener,Vi
     public void onClick(View view) {
         if (view.getId()==R.id.arriver_bt){
             if (mDistance <= DISTANCE) {
-                Toast.makeText(this,"打卡成功，加油！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"打卡成功",Toast.LENGTH_SHORT).show();
             }else{
-                Toast.makeText(this,"外勤打卡，加油！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"外勤打卡",Toast.LENGTH_SHORT).show();
             }
 
         }

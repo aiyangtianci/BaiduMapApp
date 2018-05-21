@@ -1,6 +1,12 @@
 package com.example.aiyang.baidumapapp.UI;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -30,7 +36,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());//百度地图
         setContentView(R.layout.activity_main);
 
         //1、设置支出，并不显示项目的title文字
@@ -173,4 +178,63 @@ public abstract class BaseActivity extends AppCompatActivity {
         void onClick();
     }
 
+
+    /**
+     * 构造广播监听类，监听 SDK key 验证以及网络异常广播
+     */
+    private SDKReceiver mReceiver;
+    public class SDKReceiver extends BroadcastReceiver {
+
+        public void onReceive(Context context, Intent intent) {
+            String s = intent.getAction();
+            String tx = "";
+
+            if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
+
+                tx = "key 验证出错! 错误码 :" + intent.getIntExtra
+                        (SDKInitializer.SDK_BROADTCAST_INTENT_EXTRA_INFO_KEY_ERROR_CODE, 0)
+                        +  " ; 请在 AndroidManifest.xml 文件中检查 key 设置";
+            } else if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_OK)) {
+                tx ="key 验证成功! 功能可以正常使用";
+            } else if (s.equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
+                tx = "网络出错";
+            }
+
+            AlertDialog.Builder normalDialog =
+                    new AlertDialog.Builder(context);
+            normalDialog.setTitle("提示");
+            normalDialog.setMessage(tx);
+            normalDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
+            normalDialog.setNegativeButton("关闭", null);
+            // 显示
+            normalDialog.show();
+        }
+    }
+    private void RegisterBroadcast(){
+        IntentFilter iFilter = new IntentFilter();
+        iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_OK);
+        iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
+        iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
+        mReceiver = new SDKReceiver();
+        registerReceiver(mReceiver, iFilter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 注册 SDK 广播监听者
+        RegisterBroadcast();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 取消监听 SDK 广播
+        unregisterReceiver(mReceiver);
+    }
 }

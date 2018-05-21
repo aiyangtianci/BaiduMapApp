@@ -19,6 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="2vFGIKZxvZIQSnKtrKjZLbFPE6tfwm4Y" />
+
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,11 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="hBEDvh11OuyWGUFGdjeLP7w6fP50kzW4" />
 
     </application>
 
