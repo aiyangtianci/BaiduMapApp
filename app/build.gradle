@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 22
     defaultConfig {
-        applicationId "com.example.aiyang.baidumapapp"
-        minSdkVersion 21
-        targetSdkVersion 26
+        applicationId "com.example.aiyang.baidumaptest"
+        minSdkVersion 9
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -15,6 +15,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     sourceSets{
         main{
             jniLibs.srcDir 'libs'
@@ -25,6 +26,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:22.2.1'
     implementation files('libs/BaiduLBS_Android.jar')
 }
